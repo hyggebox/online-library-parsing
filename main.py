@@ -40,7 +40,7 @@ def download_book(book_id, dir_name='books'):
 
 def download_cover(url, dir_name='images'):
     response = requests.get(url)
-    img_name = unquote(str(urlsplit(url).path.split("/")[-1]))
+    img_name = urlsplit(unquote(url)).path.split("/")[-1]
     with open(os.path.join(dir_name, img_name), "wb") as file:
         file.write(response.content)
 
