@@ -30,6 +30,7 @@ def download_book(book_id, dir_name='books'):
     book_title = get_book_title(soup)
     cover_url = get_book_covers(book_url, soup)
     comments = fetch_comments(soup)
+    genres = fetch_genres(soup)
 
     download_cover(cover_url)
 
@@ -48,9 +49,15 @@ def download_cover(url, dir_name='images'):
 
 def fetch_comments(soup):
     comments = soup.select(".texts .black")
-    for comment in comments:
-        print(comment.text)
+    # for comment in comments:
+        # print(comment.text)
     return comments
+
+
+def fetch_genres(soup):
+    a_genres = soup.select(".d_book > a")
+    genres = [a.text for a in a_genres]
+    return genres
 
 
 def get_book_title(soup):
@@ -72,7 +79,7 @@ if __name__ == "__main__":
     os.makedirs(books_dir_name, exist_ok=True)
     os.makedirs(img_dir_name, exist_ok=True)
 
-    for book_id in range(7):
+    for book_id in range(11):
         try:
             download_book(book_id, dir_name=books_dir_name)
         except requests.HTTPError:
