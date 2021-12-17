@@ -28,7 +28,7 @@ def download_book(book_id, dir_name='books'):
     soup = BeautifulSoup(bs4_response.text, 'lxml')
     parsed_book = parse_book_page(soup, book_url)
 
-    download_cover(cover_url)
+    download_cover(parsed_book['cover_url'])
 
     filename = "{}.{}.txt".format(book_id, book_title)
     safe_filename = sanitize_filename(filename)
