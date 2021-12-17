@@ -58,9 +58,8 @@ def fetch_comments(soup):
 
 
 def fetch_genres(soup):
-    a_genres = soup.select(".d_book > a")
-    genres = [a.text for a in a_genres]
-    return genres
+    genres = soup.select(".d_book > a")
+    return [genre.text for genre in genres]
 
 
 def get_book_title(soup):
