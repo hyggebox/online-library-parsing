@@ -26,11 +26,7 @@ def download_book(book_id, dir_name='books'):
     book_url = f"https://tululu.org/b{book_id}"
     bs4_response = requests.get(book_url)
     soup = BeautifulSoup(bs4_response.text, 'lxml')
-
-    book_title = get_book_title(soup)
-    cover_url = get_book_covers(book_url, soup)
-    comments = fetch_comments(soup)
-    genres = fetch_genres(soup)
+    parsed_book = parse_book_page(soup, book_url)
 
     download_cover(cover_url)
 
@@ -38,6 +34,15 @@ def download_book(book_id, dir_name='books'):
     safe_filename = sanitize_filename(filename)
     with open(os.path.join(dir_name, safe_filename), "wt") as file:
         file.write(response.text)
+
+
+def parse_book_page(soup, book_url):
+    return {
+        "book_title": get_book_title(soup),
+        "cover_url": get_book_covers(book_url, soup),
+        "comments": fetch_comments(soup),
+        "genres": fetch_genres(soup)
+    }
 
 
 def download_cover(url, dir_name='images'):
@@ -49,9 +54,7 @@ def download_cover(url, dir_name='images'):
 
 def fetch_comments(soup):
     comments = soup.select(".texts .black")
-    # for comment in comments:
-        # print(comment.text)
-    return comments
+    return [comment.text for comment in comments]
 
 
 def fetch_genres(soup):
