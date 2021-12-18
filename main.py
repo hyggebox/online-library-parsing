@@ -1,5 +1,6 @@
 import requests
 
+import argparse
 import os
 import urllib3
 
@@ -7,8 +8,6 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit, unquote
 
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def check_for_redirect(response):
@@ -30,9 +29,9 @@ def download_book(book_id, dir_name='books'):
 
     download_cover(parsed_book['cover_url'])
 
-    filename = "{}.{}.txt".format(book_id, book_title)
+    filename = "{}.{}.txt".format(book_id, parsed_book['book_title'])
     safe_filename = sanitize_filename(filename)
-    with open(os.path.join(dir_name, safe_filename), "wt") as file:
+    with open(os.path.join(dir_name, safe_filename), "wt", encoding='utf-8') as file:
         file.write(response.text)
 
 
@@ -76,12 +75,20 @@ def get_book_covers(book_url, soup):
 
 
 if __name__ == "__main__":
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    parser = argparse.ArgumentParser(
+        description='Скрипт скачивает книги с сайта tululu.org'
+    )
+    parser.add_argument("--start_id", help='Начальный id', type=int, default="1")
+    parser.add_argument("--end_id", help='Конечный id', type=int, default="10")
+    args = parser.parse_args()
+
     books_dir_name = "books"
     img_dir_name = "images"
     os.makedirs(books_dir_name, exist_ok=True)
     os.makedirs(img_dir_name, exist_ok=True)
 
-    for book_id in range(11):
+    for book_id in range(args.start_id, args.end_id+1):
         try:
             download_book(book_id, dir_name=books_dir_name)
         except requests.HTTPError:
