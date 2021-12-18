@@ -78,8 +78,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Скрипт скачивает книги с сайта tululu.org'
     )
-    parser.add_argument("--start_id", help='Начальный id', type=int, default=1)
-    parser.add_argument("--end_id", help='Конечный id', type=int, default=10)
+    parser.add_argument("start_id", help='Начальный id',
+                        type=int, nargs='?', default=1)
+    parser.add_argument("end_id", help='Конечный id',
+                        type=int, nargs='?', default=10)
     args = parser.parse_args()
 
     books_dir_name = "books"
