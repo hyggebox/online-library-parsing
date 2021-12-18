@@ -32,6 +32,7 @@ def download_book(book_id, dir_name='books'):
     safe_filename = sanitize_filename(filename)
     with open(os.path.join(dir_name, safe_filename), "wt", encoding='utf-8') as file:
         file.write(response.text)
+    return parsed_book
 
 
 def parse_book_page(soup, book_url):
