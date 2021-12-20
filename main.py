@@ -23,6 +23,8 @@ def download_book(book_id, dir_name='books'):
 
     book_url = f"https://tululu.org/b{book_id}"
     bs4_response = requests.get(book_url)
+    bs4_response.raise_for_status()
+    check_for_redirect(bs4_response)
     soup = BeautifulSoup(bs4_response.text, 'lxml')
     parsed_book = parse_book_page(soup, book_url)
 
@@ -46,6 +48,7 @@ def parse_book_page(soup, book_url):
 
 def download_cover(url, dir_name='images'):
     response = requests.get(url)
+    response.raise_for_status()
     img_name = urlsplit(unquote(url)).path.split("/")[-1]
     with open(os.path.join(dir_name, img_name), "wb") as file:
         file.write(response.content)
