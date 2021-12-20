@@ -14,7 +14,7 @@ def check_for_redirect(response):
         raise requests.HTTPError
 
 
-def download_book(book_id, dir_name='books'):
+def download_book(book_id, dir_name):
     endpoint = "https://tululu.org/txt.php"
     payload = {"id": book_id}
     response = requests.get(endpoint, params=payload, verify=False)
@@ -28,7 +28,7 @@ def download_book(book_id, dir_name='books'):
     soup = BeautifulSoup(bs4_response.text, 'lxml')
     parsed_book = parse_book_page(soup, book_url)
 
-    download_cover(parsed_book['cover_url'])
+    download_cover(parsed_book['cover_url'], img_dir_name)
 
     filename = "{}.{}.txt".format(book_id, parsed_book['book_title'])
     safe_filename = sanitize_filename(filename)
@@ -46,7 +46,7 @@ def parse_book_page(soup, book_url):
     }
 
 
-def download_cover(url, dir_name='images'):
+def download_cover(url, dir_name):
     response = requests.get(url)
     response.raise_for_status()
     img_name = urlsplit(unquote(url)).path.split("/")[-1]
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     for book_id in range(args.start_id, args.end_id+1):
         try:
-            download_book(book_id, dir_name=books_dir_name)
+            download_book(book_id, books_dir_name)
         except requests.HTTPError:
             pass
         except requests.exceptions.ConnectionError as error:
