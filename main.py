@@ -29,11 +29,20 @@ def download_book(book_id, dir_name, book_title):
 
 
 def parse_book_page(soup, book_url):
+    book_h1 = soup.select_one("#content h1").text
+    book_title, book_author = book_h1.split("::")
+    cover_src = soup.select_one(".bookimage img")
+    if cover_src:
+        img_url = urljoin(book_url, cover_src["src"])
+    else:
+        img_url = None
+    comments = soup.select(".texts .black")
+    genres = soup.select(".d_book > a")
     return {
-        "book_title": get_book_title(soup),
-        "cover_url": get_book_covers(book_url, soup),
-        "comments": fetch_comments(soup),
-        "genres": fetch_genres(soup)
+        "book_title": book_title.strip(),
+        "cover_url": img_url,
+        "comments": [comment.text for comment in comments],
+        "genres": [genre.text for genre in genres]
     }
 
 
@@ -43,29 +52,6 @@ def download_cover(url, dir_name):
     img_name = urlsplit(unquote(url)).path.split("/")[-1]
     with open(os.path.join(dir_name, img_name), "wb") as file:
         file.write(response.content)
-
-
-def fetch_comments(soup):
-    comments = soup.select(".texts .black")
-    return [comment.text for comment in comments]
-
-
-def fetch_genres(soup):
-    genres = soup.select(".d_book > a")
-    return [genre.text for genre in genres]
-
-
-def get_book_title(soup):
-    book_h1 = soup.select_one("#content h1").text
-    book_title, book_author = book_h1.split("::")
-    return book_title.strip()
-
-
-def get_book_covers(book_url, soup):
-    cover_src = soup.select_one(".bookimage img")
-    if cover_src:
-        img_url = urljoin(book_url, cover_src["src"])
-        return img_url
 
 
 if __name__ == "__main__":
