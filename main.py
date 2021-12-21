@@ -10,31 +10,22 @@ from urllib.parse import urljoin, urlsplit, unquote
 
 
 def check_for_redirect(response):
-    if response.history:
-        raise requests.HTTPError
+    for resp in response.history:
+        if resp.status_code == 302:
+            raise requests.HTTPError
 
 
-def download_book(book_id, dir_name):
+def download_book(book_id, dir_name, book_title):
     endpoint = "https://tululu.org/txt.php"
     payload = {"id": book_id}
     response = requests.get(endpoint, params=payload, verify=False)
     response.raise_for_status()
     check_for_redirect(response)
 
-    book_url = f"https://tululu.org/b{book_id}"
-    bs4_response = requests.get(book_url)
-    bs4_response.raise_for_status()
-    check_for_redirect(bs4_response)
-    soup = BeautifulSoup(bs4_response.text, 'lxml')
-    parsed_book = parse_book_page(soup, book_url)
-
-    download_cover(parsed_book['cover_url'], img_dir_name)
-
-    filename = "{}.{}.txt".format(book_id, parsed_book['book_title'])
+    filename = "{}.{}.txt".format(book_id, book_title)
     safe_filename = sanitize_filename(filename)
     with open(os.path.join(dir_name, safe_filename), "wt", encoding='utf-8') as file:
         file.write(response.text)
-    return parsed_book
 
 
 def parse_book_page(soup, book_url):
@@ -94,8 +85,16 @@ if __name__ == "__main__":
     os.makedirs(img_dir_name, exist_ok=True)
 
     for book_id in range(args.start_id, args.end_id+1):
+        book_url = f"https://tululu.org/b{book_id}"
         try:
-            download_book(book_id, books_dir_name)
+            bs4_response = requests.get(book_url)
+            bs4_response.raise_for_status()
+            check_for_redirect(bs4_response)
+            soup = BeautifulSoup(bs4_response.text, 'lxml')
+
+            parsed_book = parse_book_page(soup, book_url)
+            download_book(book_id, books_dir_name, parsed_book['book_title'])
+            download_cover(parsed_book['cover_url'], img_dir_name)
         except requests.HTTPError:
             pass
         except requests.exceptions.ConnectionError as error:
