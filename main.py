@@ -99,3 +99,5 @@ if __name__ == "__main__":
             pass
         except requests.exceptions.ConnectionError as error:
             print(error)
+        except requests.exceptions.MissingSchema:
+            pass
