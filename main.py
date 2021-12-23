@@ -77,10 +77,10 @@ if __name__ == "__main__":
 
             parsed_book = parse_book_page(soup, book_url)
             download_book(book_id, books_dir_name, parsed_book['book_title'])
-            download_cover(parsed_book['cover_url'], img_dir_name)
+            book_cover = parsed_book['cover_url']
+            if book_cover:
+                download_cover(book_cover, img_dir_name)
         except requests.HTTPError:
             pass
         except requests.exceptions.ConnectionError as error:
             print(error)
-        except requests.exceptions.MissingSchema:
-            pass
