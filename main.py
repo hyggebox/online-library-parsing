@@ -32,10 +32,7 @@ def parse_book_page(soup, book_url):
     book_h1 = soup.select_one("#content h1").text
     book_title, book_author = book_h1.split("::")
     cover_src = soup.select_one(".bookimage img")
-    if cover_src:
-        img_url = urljoin(book_url, cover_src["src"])
-    else:
-        img_url = None
+    img_url = urljoin(book_url, cover_src["src"]) if cover_src else None
     comments = soup.select(".texts .black")
     genres = soup.select(".d_book > a")
     return {
