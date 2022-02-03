@@ -3,6 +3,7 @@ import json
 import os
 import urllib3
 import re
+import io
 
 import requests
 
@@ -84,6 +85,12 @@ if __name__ == "__main__":
                 print(error)
 
     json_path = os.path.join(args.json_path or dest_folder, "description.json")
+
+    if os.path.isfile(json_path):
+        with io.open(json_path, encoding="utf-8") as file:
+            existing_description = json.load(file)
+        books_description.update(existing_description)
+
     with open(json_path, "w", encoding="utf8") as file:
         json.dump(books_description, file, ensure_ascii=False, indent=4)
 
