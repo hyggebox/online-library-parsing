@@ -1,10 +1,9 @@
 import argparse
+import io
 import json
 import os
-import urllib3
 import re
-import io
-
+import urllib3
 import requests
 
 from bs4 import BeautifulSoup
