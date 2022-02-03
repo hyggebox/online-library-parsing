@@ -13,16 +13,19 @@ from helpers import (check_for_redirect, create_description,download_book,
                      download_cover, parse_book_page)
 
 
+def get_last_page(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "lxml")
+    last_page = int(soup.select_one(".center .npage:last-child").text) + 1
+    return last_page
+
+
 if __name__ == "__main__":
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     category_url = "http://tululu.org/l55/"
     endpoint = "https://tululu.org"
-    num_pages = 4
-
-    bs4_response = requests.get(category_url)
-    bs4_response.raise_for_status()
-    soup = BeautifulSoup(bs4_response.text, "lxml")
-    last_page = int(soup.select_one(".center .npage:last-child").text) + 1
+    last_page = get_last_page(category_url)
 
     parser = argparse.ArgumentParser(
         description='Скрипт скачивает книги с сайта tululu.org'
