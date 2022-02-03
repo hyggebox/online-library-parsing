@@ -19,9 +19,22 @@ if __name__ == "__main__":
     endpoint = "https://tululu.org"
     num_pages = 4
 
-    books_description = {}
+    bs4_response = requests.get(category_url)
+    bs4_response.raise_for_status()
+    soup = BeautifulSoup(bs4_response.text, "lxml")
+    last_page = int(soup.select_one(".center .npage:last-child").text) + 1
 
-    for page in range(num_pages):
+    parser = argparse.ArgumentParser(
+        description='Скрипт скачивает книги с сайта tululu.org'
+    )
+    parser.add_argument("--start_page", help='Скачивать начиная со стр.',
+                        type=int, default=1)
+    parser.add_argument("--end_page", help='Скачивать до стр. (не включая)',
+                        type=int, default=last_page)
+    args = parser.parse_args()
+
+    books_description = {}
+    for page in range(args.start_page-1, args.end_page-1):
         books_dir_name = "books"
         img_dir_name = "images"
         os.makedirs(books_dir_name, exist_ok=True)
