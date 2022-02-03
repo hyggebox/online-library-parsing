@@ -48,7 +48,6 @@ def parse_book_page(soup, book_url):
         "title": book_title.strip(),
         "author": book_author.strip(),
         "cover_url": img_url,
-        "book_url": book_url,
         "comments": [comment.text for comment in comments],
         "genres": [genre.text for genre in genres]
     }
