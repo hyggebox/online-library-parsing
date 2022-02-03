@@ -45,7 +45,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dest_folder = args.dest_folder
-    books_dir_path = os.path.join(dest_folder, "books")
+    books_dir_path = os.path.join(dest_folder, "texts")
     img_dir_path = os.path.join(dest_folder, "images")
 
     os.makedirs(books_dir_path, exist_ok=True)
