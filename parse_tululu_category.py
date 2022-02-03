@@ -28,21 +28,31 @@ if __name__ == "__main__":
     last_page = get_last_page(category_url)
 
     parser = argparse.ArgumentParser(
-        description='Скрипт скачивает книги с сайта tululu.org'
+        description="Скрипт скачивает книги с сайта tululu.org"
     )
-    parser.add_argument("--start_page", help='Скачивать начиная со стр.',
+    parser.add_argument("-s", "--start_page", help="Скачивать начиная со стр.",
                         type=int, default=1)
-    parser.add_argument("--end_page", help='Скачивать до стр. (не включая)',
+    parser.add_argument("-e", "--end_page", help="Скачивать до стр. (не включая)",
                         type=int, default=last_page)
+    parser.add_argument("--skip_imgs", action="store_true",
+                        help="Не скачивать картинки")
+    parser.add_argument("--skip_txt", action="store_true",
+                        help="Не скачивать книги")
+    parser.add_argument("-d", "--dest_folder", default="",
+                        help="Путь к каталогу с результатами парсинга")
+    parser.add_argument("-j", "--json_path", default="",
+                        help="Путь к *.json файлу с результатами")
     args = parser.parse_args()
+
+    dest_folder = args.dest_folder
+    books_dir_path = os.path.join(dest_folder, "books")
+    img_dir_path = os.path.join(dest_folder, "images")
+
+    os.makedirs(books_dir_path, exist_ok=True)
+    os.makedirs(img_dir_path, exist_ok=True)
 
     books_description = {}
     for page in range(args.start_page-1, args.end_page-1):
-        books_dir_name = "books"
-        img_dir_name = "images"
-        os.makedirs(books_dir_name, exist_ok=True)
-        os.makedirs(img_dir_name, exist_ok=True)
-
         bs4_response = requests.get(urljoin(category_url, str(page+1)))
         bs4_response.raise_for_status()
         soup = BeautifulSoup(bs4_response.text, "lxml")
@@ -60,11 +70,11 @@ if __name__ == "__main__":
                 soup = BeautifulSoup(bs4_response.text, "lxml")
 
                 parsed_book = parse_book_page(soup, book_url)
-                book_path = download_book(book_id, books_dir_name,
-                                          parsed_book["title"])
+                book_path = download_book(book_id, books_dir_path,
+                                          parsed_book["title"]) if not args.skip_txt else None
                 book_cover = parsed_book["cover_url"]
-                if book_cover:
-                    img_path = download_cover(book_cover, img_dir_name)
+                img_path = download_cover(book_cover,
+                                          img_dir_path) if book_cover and not args.skip_imgs else None
                 books_description[book_id] = create_description(parsed_book,
                                                                 img_path,
                                                                 book_path)
@@ -73,6 +83,7 @@ if __name__ == "__main__":
             except requests.exceptions.ConnectionError as error:
                 print(error)
 
-    with open("books_description.json", "w", encoding="utf8") as file:
+    json_path = os.path.join(args.json_path or dest_folder, "description.json")
+    with open(json_path, "w", encoding="utf8") as file:
         json.dump(books_description, file, ensure_ascii=False, indent=4)
 
