@@ -21,18 +21,14 @@ def get_last_page(url):
     return last_page
 
 
-if __name__ == "__main__":
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    category_url = "http://tululu.org/l55/"
-    endpoint = "https://tululu.org"
-    last_page = get_last_page(category_url)
-
+def get_args():
     parser = argparse.ArgumentParser(
         description="Скрипт скачивает книги с сайта tululu.org"
     )
     parser.add_argument("-s", "--start_page", help="Скачивать начиная со стр.",
                         type=int, default=1)
-    parser.add_argument("-e", "--end_page", help="Скачивать до стр. (не включая)",
+    parser.add_argument("-e", "--end_page",
+                        help="Скачивать до стр. (не включая)",
                         type=int, default=last_page)
     parser.add_argument("--skip_imgs", action="store_true",
                         help="Не скачивать картинки")
@@ -42,7 +38,16 @@ if __name__ == "__main__":
                         help="Путь к каталогу с результатами парсинга")
     parser.add_argument("-j", "--json_path", default="",
                         help="Путь к *.json файлу с результатами")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    category_url = "http://tululu.org/l55/"
+    endpoint = "https://tululu.org"
+    last_page = get_last_page(category_url)
+
+    args = get_args()
 
     dest_folder = args.dest_folder
     books_dir_path = os.path.join(dest_folder, "texts")
