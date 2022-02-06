@@ -5,8 +5,8 @@ import requests
 
 from bs4 import BeautifulSoup
 
-from helpers import (check_for_redirect, download_book,
-                     download_cover, parse_book_page)
+from parse_download_handlers import (check_for_redirect, download_book,
+                                     download_cover, parse_book_page)
 
 
 if __name__ == "__main__":

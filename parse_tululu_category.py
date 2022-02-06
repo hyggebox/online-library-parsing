@@ -9,8 +9,8 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
-from helpers import (check_for_redirect, create_description,download_book,
-                     download_cover, parse_book_page)
+from parse_download_handlers import (check_for_redirect, download_book,
+                                     download_cover, parse_book_page)
 
 
 def get_last_page(url):
