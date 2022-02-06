@@ -57,8 +57,8 @@ if __name__ == "__main__":
     os.makedirs(img_dir_path, exist_ok=True)
 
     books_description = {}
-    for page in range(args.start_page-1, args.end_page-1):
-        bs4_response = requests.get(urljoin(category_url, str(page+1)))
+    for page in range(args.start_page, args.end_page):
+        bs4_response = requests.get(urljoin(category_url, str(page)))
         bs4_response.raise_for_status()
         soup = BeautifulSoup(bs4_response.text, "lxml")
 
