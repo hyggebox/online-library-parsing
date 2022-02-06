@@ -66,7 +66,7 @@ if __name__ == "__main__":
         for book_card in book_cards:
             book_path = book_card["href"]
             book_url = urljoin(endpoint, book_path)
-            book_id = re.sub("[^0-9]", "", book_path)
+            book_id = re.sub(r"[^0-9]", "", book_path)
 
             try:
                 bs4_response = requests.get(book_url)
