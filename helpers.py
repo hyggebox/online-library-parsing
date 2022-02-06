@@ -51,15 +51,3 @@ def parse_book_page(soup, book_url):
         "comments": [comment.text for comment in comments],
         "genres": [genre.text for genre in genres]
     }
-
-
-def create_description(parsed_book, img_path, book_path):
-    description = {
-        "title": parsed_book["title"],
-        "author": parsed_book["author"],
-        "img_src": img_path,
-        "book_path": book_path,
-        "comments": parsed_book["comments"],
-        "genres": parsed_book["genres"]
-    }
-    return description

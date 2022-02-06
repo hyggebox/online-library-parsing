@@ -80,9 +80,14 @@ if __name__ == "__main__":
                 book_cover = parsed_book["cover_url"]
                 img_path = download_cover(book_cover,
                                           img_dir_path) if book_cover and not args.skip_imgs else None
-                books_description[book_id] = create_description(parsed_book,
-                                                                img_path,
-                                                                book_path)
+                books_description[book_id] = {
+                    "title": parsed_book["title"],
+                    "author": parsed_book["author"],
+                    "img_src": img_path,
+                    "book_path": book_path,
+                    "comments": parsed_book["comments"],
+                    "genres": parsed_book["genres"]
+                }
             except requests.HTTPError:
                 pass
             except requests.exceptions.ConnectionError as error:
