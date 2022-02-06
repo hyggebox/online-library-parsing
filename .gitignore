@@ -1,6 +1,7 @@
 # Temporary files
-books/
+texts/
 images/
+description.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
