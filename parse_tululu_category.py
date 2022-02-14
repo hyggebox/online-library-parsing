@@ -50,8 +50,10 @@ if __name__ == "__main__":
     args = get_args()
 
     dest_folder = args.dest_folder
-    books_dir_path = os.path.join(dest_folder, "texts")
-    img_dir_path = os.path.join(dest_folder, "images")
+    image_dir_name = "images"
+    text_dir_name = "texts"
+    books_dir_path = os.path.join(dest_folder, text_dir_name)
+    img_dir_path = os.path.join(dest_folder, image_dir_name)
 
     os.makedirs(books_dir_path, exist_ok=True)
     os.makedirs(img_dir_path, exist_ok=True)
@@ -75,16 +77,16 @@ if __name__ == "__main__":
                 soup = BeautifulSoup(bs4_response.text, "lxml")
 
                 parsed_book = parse_book_page(soup, book_url)
-                book_path = download_book(book_id, books_dir_path,
-                                          parsed_book["title"]) if not args.skip_txt else None
+                text_filename = download_book(book_id, books_dir_path,
+                                              parsed_book["title"]) if not args.skip_txt else None
                 book_cover = parsed_book["cover_url"]
-                img_path = download_cover(book_cover,
+                img_name = download_cover(book_cover,
                                           img_dir_path) if book_cover and not args.skip_imgs else None
                 books_description[book_id] = {
                     "title": parsed_book["title"],
                     "author": parsed_book["author"],
-                    "img_src": img_path,
-                    "book_path": book_path,
+                    "img_src": (dest_folder, image_dir_name, img_name),
+                    "book_path": (dest_folder, text_dir_name, text_filename),
                     "comments": parsed_book["comments"],
                     "genres": parsed_book["genres"]
                 }
