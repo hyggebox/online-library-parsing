@@ -16,8 +16,29 @@
 </head>
 <body>
   <div class="container">
-    <div class="row">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {%- if current_page < 1 -%}
+          <li class="page-item"><a class="page-link" href="#">Назад</a></li>
+        {%- else -%}
+          <li class="page-item"><a class="page-link" href="/pages/index{{ current_page-1 }}.html">Назад</a></li>
+        {% endif %}
+        {%- for page in range(pages_num) -%}
+          {%- if page == current_page -%}
+            <li class="page-item active"><a class="page-link" href="/pages/index{{ page }}.html">{{ page+1 }}</a></li>
+          {%- else -%}
+            <li class="page-item"><a class="page-link" href="/pages/index{{ page }}.html">{{ page+1 }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {%- if current_page+1 == pages_num -%}
+          <li class="page-item"><a class="page-link" href="#">Вперёд</a></li>
+        {%- else -%}
+          <li class="page-item"><a class="page-link" href="/pages/index{{ current_page+1 }}.html">Вперёд</a></li>
+        {% endif %}
+      </ul>
+    </nav>
 
+    <div class="row">
       {% for book in books.values() %}
         <div class="col-6">
           <div class="card mb-3" style="max-width: 540px;">
