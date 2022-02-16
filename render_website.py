@@ -1,3 +1,4 @@
+import argparse
 import io
 import json
 import os
@@ -14,7 +15,9 @@ def reload_site():
     )
     template = env.get_template("template.html")
 
-    with io.open("description.json", encoding="utf-8") as file:
+    args = get_args()
+    json_path = os.path.join(args.json_path, "description.json")
+    with io.open(json_path, encoding="utf-8") as file:
         books_description = json.load(file)
 
     books_ids = [book_id for book_id, book_description in books_description.items()]
@@ -32,6 +35,15 @@ def reload_site():
         with open(os.path.join("pages", f"index{page}.html"), "w",
                   encoding="utf8") as file:
             file.write(rendered_page)
+
+
+def get_args():
+    parser = argparse.ArgumentParser(
+        description="Сайт с библиотекой книг"
+    )
+    parser.add_argument("-j", "--json_path", default="",
+                        help="Путь к *.json файлу с результатами парсинга")
+    return parser.parse_args()
 
 
 def main():
