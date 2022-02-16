@@ -71,6 +71,17 @@ python parse_tululu_category.py
 python parse_tululu_category.py -s 10 -e 25 --skip_imgs -d books
 ```
 
+## Запустить сайт со скачанными книгами
+Запустите сайт командой:
+```shell
+python render_website.py
+```
+Если для *.json файла с результатами парсинга вы указывали свой путь, 
+укажите его также при запуске скрипта:
+```shell
+python render_website.py results
+```
+
 
 ## Цели проекта
 
