@@ -2,9 +2,8 @@ import io
 import json
 import os
 
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from livereload import Server, shell
+from livereload import Server
 from more_itertools import chunked
 
 
