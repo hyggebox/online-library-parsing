@@ -6,16 +6,16 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
+from functools import partial
 
 
-def reload_site():
+def reload_site(args):
     env = Environment(
         loader=FileSystemLoader("."),
         autoescape=select_autoescape(["html", "xml"])
     )
     template = env.get_template("template.html")
 
-    args = get_args()
     json_path = os.path.join(args.json_path, "description.json")
     with io.open(json_path, encoding="utf-8") as file:
         books_description = json.load(file)
@@ -48,10 +48,11 @@ def get_args():
 
 
 def main():
+    args = get_args()
     os.makedirs("pages", exist_ok=True)
-    reload_site()
+    reload_site(args)
     server = Server()
-    server.watch("template.html", reload_site)
+    server.watch("template.html", lambda: reload_site(args))
     server.serve(default_filename="pages/index0.html")
 
 
