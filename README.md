@@ -82,6 +82,10 @@ python render_website.py
 python render_website.py results
 ```
 
+________
+Ссылка на [реализацию онлайн-библиотеки](https://hyggebox.github.io/online-library-parsing/pages/index0.html)
+со скачанными книгами
+
 
 ## Цели проекта
 
