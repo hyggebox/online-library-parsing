@@ -25,15 +25,15 @@ def reload_site():
     books_groups = list(chunked(books_ids, books_per_page))
     pages_num = len(books_groups)
 
-    for page in range(pages_num):
-        books_group = books_groups[page]
+    for page_num in range(pages_num):
+        books_group = books_groups[page_num]
         books = {book_id: books_description[book_id] for book_id in books_group}
         rendered_page = template.render(
             books=books,
             pages_num=pages_num,
-            current_page=page
+            current_page=page_num
         )
-        with open(os.path.join("pages", f"index{page}.html"), "w",
+        with open(os.path.join("pages", f"index{page_num}.html"), "w",
                   encoding="utf8") as file:
             file.write(rendered_page)
 
