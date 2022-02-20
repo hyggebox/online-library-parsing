@@ -20,7 +20,7 @@
     <nav aria-label="Pagination">
       <ul class="pagination">
         {%- if current_page < 1 -%}
-          <li class="page-item"><a class="page-link" href="#">Назад</a></li>
+          <li class="page-item disabled"><a class="page-link" href="#">Назад</a></li>
         {%- else -%}
           <li class="page-item"><a class="page-link" href="../pages/index{{ current_page-1 }}.html">Назад</a></li>
         {% endif %}
@@ -32,7 +32,7 @@
           {% endif %}
         {% endfor %}
         {%- if current_page+1 == pages_num -%}
-          <li class="page-item"><a class="page-link" href="#">Вперёд</a></li>
+          <li class="page-item disabled"><a class="page-link" href="#">Вперёд</a></li>
         {%- else -%}
           <li class="page-item"><a class="page-link" href="../pages/index{{ current_page+1 }}.html">Вперёд</a></li>
         {% endif %}
