@@ -6,7 +6,6 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
-from functools import partial
 
 
 def reload_site(args):
