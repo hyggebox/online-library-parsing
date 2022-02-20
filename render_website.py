@@ -20,8 +20,9 @@ def reload_site():
     with io.open(json_path, encoding="utf-8") as file:
         books_description = json.load(file)
 
+    books_per_page = 20
     books_ids = [book_id for book_id, book_description in books_description.items()]
-    books_groups = list(chunked(books_ids, 20))
+    books_groups = list(chunked(books_ids, books_per_page))
     pages_num = len(books_groups)
 
     for page in range(pages_num):
